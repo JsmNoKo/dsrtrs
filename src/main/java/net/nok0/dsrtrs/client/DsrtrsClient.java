@@ -27,8 +27,6 @@ public class DsrtrsClient implements ClientModInitializer {
 	private static final float VANILLA_FLY_SPEED = 0.05f;
 	private static final float TRAVEL_FLY_SPEED = VANILLA_FLY_SPEED * 6f;
 
-	private static final int FINDER_INTERVAL_TICKS = 20;
-
 	private static KeyMapping killMobsKey;
 	private static KeyMapping travelKey;
 	private static KeyMapping instabreakKey;
@@ -38,7 +36,6 @@ public class DsrtrsClient implements ClientModInitializer {
 	private static boolean travelMode = false;
 	private static boolean instabreak = false;
 	private static boolean antiHunger = false;
-	private static boolean stashFinder = false;
 
 	/** The player instance we last pushed our toggle state to the server for (join / respawn). */
 	private static LocalPlayer syncedFor = null;
@@ -97,8 +94,7 @@ public class DsrtrsClient implements ClientModInitializer {
 		}
 
 		while (stashFinderKey.consumeClick()) {
-			stashFinder = !stashFinder;
-			status(player, "Stash finder", stashFinder);
+			StashFinder.update(client);
 		}
 
 		if (travelMode) {
@@ -106,14 +102,10 @@ public class DsrtrsClient implements ClientModInitializer {
 			player.getAbilities().mayfly = true;
 			player.getAbilities().setFlyingSpeed(TRAVEL_FLY_SPEED);
 		}
-
-		if (stashFinder && client.level != null && client.level.getGameTime() % FINDER_INTERVAL_TICKS == 0) {
-			StashFinder.update(client);
-		}
 	}
 
 	private static void status(LocalPlayer player, String name, boolean on) {
-		Minecraft.getInstance().gui.setOverlayMessage(Component.literal(name + ": " + (on ? "ON" : "OFF")), false);
+		player.sendSystemMessage(Component.literal(name + ": " + (on ? "ON" : "OFF")));
 	}
 
 	/** Update our local copy (used by the block-breaking prediction) and tell the server. */

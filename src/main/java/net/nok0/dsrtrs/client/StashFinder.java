@@ -12,8 +12,8 @@ import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
 
 /**
- * Finds the nearest chest / trapped chest / barrel / shulker box (through walls — it reads loaded
- * block data, it doesn't need line of sight) and tells you where it is on the action bar.
+ * One-shot scan: finds the nearest chest / trapped chest / barrel / shulker box (through walls — it reads loaded
+ * block data, it doesn't need line of sight) and tells you where it is in chat.
  */
 public final class StashFinder {
 	private static final int RADIUS = 32;
@@ -57,7 +57,7 @@ public final class StashFinder {
 		}
 
 		if (best == null) {
-			client.gui.setOverlayMessage(Component.literal("Stash finder: nothing within " + RADIUS + " blocks"), false);
+			player.sendSystemMessage(Component.literal("Stash finder: nothing within " + RADIUS + " blocks"));
 			return;
 		}
 
@@ -70,9 +70,9 @@ public final class StashFinder {
 		int sector = ((Math.round(diff / 45f) % 8) + 8) % 8;
 
 		String vertical = Math.abs(dy) < 2 ? "same level" : (dy > 0 ? Math.round(dy) + " up" : Math.round(-dy) + " down");
-		client.gui.setOverlayMessage(Component.literal(String.format(
+		player.sendSystemMessage(Component.literal(String.format(
 				"Stash: %d blocks %s, %s  (%d, %d, %d)",
 				Math.round(Math.sqrt(bestDistSq)), SECTORS[sector], vertical,
-				best.getX(), best.getY(), best.getZ())), false);
+				best.getX(), best.getY(), best.getZ())));
 	}
 }
