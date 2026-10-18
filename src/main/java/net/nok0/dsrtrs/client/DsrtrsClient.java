@@ -17,6 +17,7 @@ import net.minecraft.world.level.GameType;
 
 import net.nok0.dsrtrs.Dsrtrs;
 import net.nok0.dsrtrs.Features;
+import net.nok0.dsrtrs.TravelMode;
 import net.nok0.dsrtrs.network.FeatureTogglePayload;
 import net.nok0.dsrtrs.network.KillMobsPayload;
 
@@ -24,8 +25,8 @@ public class DsrtrsClient implements ClientModInitializer {
 	private static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(Dsrtrs.id("main"));
 
 	/** Vanilla creative flying speed is 0.05. This is 6x that — raise or lower to taste. */
-	private static final float VANILLA_FLY_SPEED = 0.05f;
-	private static final float TRAVEL_FLY_SPEED = VANILLA_FLY_SPEED * 6f;
+	private static final float VANILLA_FLY_SPEED = TravelMode.VANILLA_FLY_SPEED;
+	private static final float TRAVEL_FLY_SPEED = TravelMode.TRAVEL_FLY_SPEED;
 
 	private static KeyMapping killMobsKey;
 	private static KeyMapping travelKey;
@@ -67,14 +68,20 @@ public class DsrtrsClient implements ClientModInitializer {
 			syncedFor = player;
 			pushFeature(player, Features.Feature.INSTABREAK, instabreak);
 			pushFeature(player, Features.Feature.ANTI_HUNGER, antiHunger);
+			pushFeature(player, Features.Feature.TRAVEL_MODE, travelMode);
 		}
 
 		while (killMobsKey.consumeClick()) {
+			if (!ClientPlayNetworking.canSend(KillMobsPayload.TYPE)) {
+				player.sendSystemMessage(Component.literal("This server doesn't have the dsrtrs mod installed"));
+				continue;
+			}
 			ClientPlayNetworking.send(KillMobsPayload.INSTANCE);
 		}
 
 		while (travelKey.consumeClick()) {
 			travelMode = !travelMode;
+			pushFeature(player, Features.Feature.TRAVEL_MODE, travelMode);
 			status(player, "Travel mode", travelMode);
 			if (!travelMode) {
 				restoreAbilities(client, player);

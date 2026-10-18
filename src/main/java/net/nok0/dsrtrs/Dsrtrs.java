@@ -30,18 +30,24 @@ public class Dsrtrs implements ModInitializer {
 		ServerPlayNetworking.registerGlobalReceiver(KillMobsPayload.TYPE,
 				(payload, context) -> MobPurge.purge(context.player()));
 
-		// Instabreak / anti-hunger toggles from the client.
+		// Instabreak / anti-hunger / travel mode toggles from the client.
 		PayloadTypeRegistry.serverboundPlay().register(FeatureTogglePayload.TYPE, FeatureTogglePayload.CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(FeatureTogglePayload.TYPE, (payload, context) -> {
 			Features.Feature feature = Features.Feature.byId(payload.feature());
 			if (feature != null) {
 				Features.set(feature, context.player().getUUID(), payload.enabled());
+				if (feature == Features.Feature.TRAVEL_MODE) {
+					TravelMode.apply(context.player(), payload.enabled());
+				}
 			}
 		});
 
 		// Anti-hunger: keep food and saturation full for players who switched it on.
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+				if (Features.has(Features.Feature.TRAVEL_MODE, player.getUUID()) && !player.getAbilities().mayfly) {
+					TravelMode.apply(player, true); // e.g. after respawn or a game mode change
+				}
 				if (Features.has(Features.Feature.ANTI_HUNGER, player.getUUID())) {
 					FoodData food = player.getFoodData();
 					food.setFoodLevel(20);

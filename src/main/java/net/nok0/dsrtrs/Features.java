@@ -12,7 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class Features {
 	public enum Feature {
 		INSTABREAK,
-		ANTI_HUNGER;
+		ANTI_HUNGER,
+		TRAVEL_MODE;
 
 		public static Feature byId(int id) {
 			Feature[] all = values();
@@ -22,12 +23,17 @@ public final class Features {
 
 	private static final Set<UUID> INSTABREAK = ConcurrentHashMap.newKeySet();
 	private static final Set<UUID> ANTI_HUNGER = ConcurrentHashMap.newKeySet();
+	private static final Set<UUID> TRAVEL_MODE = ConcurrentHashMap.newKeySet();
 
 	private Features() {
 	}
 
 	private static Set<UUID> setFor(Feature feature) {
-		return feature == Feature.INSTABREAK ? INSTABREAK : ANTI_HUNGER;
+		return switch (feature) {
+			case INSTABREAK -> INSTABREAK;
+			case ANTI_HUNGER -> ANTI_HUNGER;
+			case TRAVEL_MODE -> TRAVEL_MODE;
+		};
 	}
 
 	public static void set(Feature feature, UUID player, boolean enabled) {
