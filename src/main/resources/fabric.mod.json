@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "dsrtrs",
+	"version": "${version}",
+	"name": "Dsrtrs",
+	"description": "Hello, so I see you found my mod. It is my first mod mainly for personal uses but thanks.",
+	"authors": [
+		"Nok_0"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/dsrtrs/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.nok0.dsrtrs.Dsrtrs"
+		],
+		"client": [
+			"net.nok0.dsrtrs.client.DsrtrsClient"
+		],
+		"fabric-datagen": [
+			"net.nok0.dsrtrs.DsrtrsDataGenerator"
+		]
+	},
+	"mixins": [
+		"dsrtrs.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.5",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}

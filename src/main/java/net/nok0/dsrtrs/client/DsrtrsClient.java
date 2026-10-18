@@ -4,8 +4,6 @@ import java.util.UUID;
 
 import com.mojang.blaze3d.platform.InputConstants;
 
-import org.lwjgl.glfw.GLFW;
-
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
@@ -45,18 +43,17 @@ public class DsrtrsClient implements ClientModInitializer {
 	/** The player instance we last pushed our toggle state to the server for (join / respawn). */
 	private static LocalPlayer syncedFor = null;
 
-	private static KeyMapping key(String name, int glfwKey) {
-		return KeyMappingHelper.registerKeyMapping(
-				new KeyMapping(name, InputConstants.Type.KEYSYM, glfwKey, CATEGORY));
+	private static KeyMapping key(String name, int keyCode) {
+		return KeyMappingHelper.registerKeyMapping(new KeyMapping(name, keyCode, CATEGORY));
 	}
 
 	@Override
 	public void onInitializeClient() {
-		killMobsKey = key("key.dsrtrs.kill_mobs", GLFW.GLFW_KEY_R);
-		travelKey = key("key.dsrtrs.travel_mode", GLFW.GLFW_KEY_K);
-		instabreakKey = key("key.dsrtrs.instabreak", GLFW.GLFW_KEY_B);
-		antiHungerKey = key("key.dsrtrs.anti_hunger", GLFW.GLFW_KEY_H);
-		stashFinderKey = key("key.dsrtrs.stash_finder", GLFW.GLFW_KEY_G);
+		killMobsKey = key("key.dsrtrs.kill_mobs", InputConstants.KEY_R);
+		travelKey = key("key.dsrtrs.travel_mode", InputConstants.KEY_K);
+		instabreakKey = key("key.dsrtrs.instabreak", InputConstants.KEY_B);
+		antiHungerKey = key("key.dsrtrs.anti_hunger", InputConstants.KEY_H);
+		stashFinderKey = key("key.dsrtrs.stash_finder", InputConstants.KEY_G);
 
 		ClientTickEvents.END_CLIENT_TICK.register(DsrtrsClient::tick);
 	}
@@ -116,7 +113,7 @@ public class DsrtrsClient implements ClientModInitializer {
 	}
 
 	private static void status(LocalPlayer player, String name, boolean on) {
-		player.displayClientMessage(Component.literal(name + ": " + (on ? "ON" : "OFF")), true);
+		Minecraft.getInstance().gui.setOverlayMessage(Component.literal(name + ": " + (on ? "ON" : "OFF")), false);
 	}
 
 	/** Update our local copy (used by the block-breaking prediction) and tell the server. */

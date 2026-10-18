@@ -34,7 +34,7 @@ public final class MobPurge {
 			mob.kill(level);
 		}
 
-		player.displayClientMessage(Component.literal("Killed " + targets.size() + " mobs"), true);
+		player.sendSystemMessage(Component.literal("Killed " + targets.size() + " mobs"), true);
 	}
 
 	/** Things you almost certainly don't want to lose by accident in your base. */

@@ -57,7 +57,7 @@ public final class StashFinder {
 		}
 
 		if (best == null) {
-			player.displayClientMessage(Component.literal("Stash finder: nothing within " + RADIUS + " blocks"), true);
+			client.gui.setOverlayMessage(Component.literal("Stash finder: nothing within " + RADIUS + " blocks"), false);
 			return;
 		}
 
@@ -70,9 +70,9 @@ public final class StashFinder {
 		int sector = ((Math.round(diff / 45f) % 8) + 8) % 8;
 
 		String vertical = Math.abs(dy) < 2 ? "same level" : (dy > 0 ? Math.round(dy) + " up" : Math.round(-dy) + " down");
-		player.displayClientMessage(Component.literal(String.format(
+		client.gui.setOverlayMessage(Component.literal(String.format(
 				"Stash: %d blocks %s, %s  (%d, %d, %d)",
 				Math.round(Math.sqrt(bestDistSq)), SECTORS[sector], vertical,
-				best.getX(), best.getY(), best.getZ())), true);
+				best.getX(), best.getY(), best.getZ())), false);
 	}
 }

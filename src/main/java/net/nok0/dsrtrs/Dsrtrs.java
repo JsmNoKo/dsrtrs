@@ -26,12 +26,12 @@ public class Dsrtrs implements ModInitializer {
 		ModItems.initialize();
 
 		// R key: the client asks, the server does the killing.
-		PayloadTypeRegistry.playC2S().register(KillMobsPayload.TYPE, KillMobsPayload.CODEC);
+		PayloadTypeRegistry.serverboundPlay().register(KillMobsPayload.TYPE, KillMobsPayload.CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(KillMobsPayload.TYPE,
 				(payload, context) -> MobPurge.purge(context.player()));
 
 		// Instabreak / anti-hunger toggles from the client.
-		PayloadTypeRegistry.playC2S().register(FeatureTogglePayload.TYPE, FeatureTogglePayload.CODEC);
+		PayloadTypeRegistry.serverboundPlay().register(FeatureTogglePayload.TYPE, FeatureTogglePayload.CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(FeatureTogglePayload.TYPE, (payload, context) -> {
 			Features.Feature feature = Features.Feature.byId(payload.feature());
 			if (feature != null) {
