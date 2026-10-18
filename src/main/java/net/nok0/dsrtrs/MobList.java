@@ -23,9 +23,9 @@ public final class MobList {
 
 	private static class Data {
 		List<String> mobs = new ArrayList<>(List.of(
-				"minecraft:cow", "minecraft:pig", "minecraft:sheep", "minecraft:chicken",
-				"minecraft:rabbit", "minecraft:horse", "minecraft:donkey", "minecraft:mule",
-				"minecraft:llama", "minecraft:goat", "minecraft:cat", "minecraft:wolf"));
+				"minecraft:player", "minecraft:pillager", "minecraft:illager", "minecraft:pig",
+				"minecraft:cow", "minecraft:enderman", "minecraft:zombie", "minecraft:skeleton",
+				"minecraft:spider", "minecraft:evoker", "minecraft:iron_golem", "minecraft:creeper"));
 	}
 
 	private MobList() {
