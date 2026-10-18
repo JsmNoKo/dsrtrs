@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.Npc;
 import net.minecraft.world.entity.TamableAnimal;
@@ -34,7 +35,22 @@ public final class MobPurge {
 			mob.kill(level);
 		}
 
-		player.sendSystemMessage(Component.literal("Killed " + targets.size() + " mobs"), true);
+		// Other players only count if "minecraft:player" is in the list. Never the one who pressed the key.
+		int killedPlayers = 0;
+		if (MobList.get().contains("minecraft:player")) { // explicit only: "*" does not include players
+			List<Player> players = level.getEntitiesOfClass(Player.class, box,
+					other -> other != player
+							&& other.isAlive()
+							&& !other.isSpectator()
+							&& other.distanceToSqr(player) <= maxDistSq);
+			for (Player other : players) {
+				other.kill(level);
+			}
+			killedPlayers = players.size();
+		}
+
+		player.sendSystemMessage(Component.literal("Killed " + targets.size() + " mobs"
+				+ (killedPlayers > 0 ? " and " + killedPlayers + " players" : "")), true);
 	}
 
 	/** Things you almost certainly don't want to lose by accident in your base. */
